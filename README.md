@@ -122,9 +122,10 @@ Method: GET
 
   
 ## JAVA EE Lab 1:
-####Endpoints
 
-#####Create Student
+### Endpoints
+
+#### Create Student
 * Method: POST
 * Endpoint: `http://localhost:8080/student-management-system/api/v1/students`
 * Student details in request body in JSON format
