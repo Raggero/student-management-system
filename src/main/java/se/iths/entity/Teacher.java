@@ -2,56 +2,43 @@ package se.iths.entity;
 
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-public class Student {
+public class Teacher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotEmpty
     private String firstName;
-
-    @NotEmpty
     private String lastName;
-
-    @NotEmpty
     private String email;
 
-    private String phoneNumber;
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
+    private List<Subject> subjects = new ArrayList<>();
 
+    public void addSubject(Subject subject) {
+        subjects.add(subject);
+        subject.setTeacher(this);
+    }
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "student_subject",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "subject_id"))
-    private Set<Subject> subjects = new HashSet<>();
-
-    public Student(String firstName, String lastName, String email) {
+    public Teacher(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
     }
 
-    public Student() {
-    }
-
-    public void addSubject(Subject subject) {
-        subjects.add(subject);
-        subject.getStudents().add(this);
+    public Teacher() {
     }
 
     @JsonbTransient
-    public Set<Subject> getSubjects() {
+    public List<Subject> getSubjects() {
         return subjects;
     }
 
-    public void setSubjects(Set<Subject> subjects) {
+    public void setSubjects(List<Subject> subjects) {
         this.subjects = subjects;
     }
 
@@ -85,13 +72,5 @@ public class Student {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
     }
 }
